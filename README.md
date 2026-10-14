@@ -1,134 +1,160 @@
-# TipDrop
+<p align="center">
+  <img src="brand/logo-square-512.png" alt="TipDrop logo" width="120">
+</p>
 
-Crypto tips and payment requests as links, on **BNB Chain, Solana, Base, Arbitrum, Polygon and Ethereum**.
+<h1 align="center">TipDrop</h1>
 
-- **Send a tip.** Put USDT, USDC or the network's coin (BNB, SOL, ETH, POL) inside a link. The recipient opens it, pastes an address (or connects a wallet) and claims. **The recipient never pays anything.**
-- **Request money.** Make a payment link with your amount and address. Whoever opens it pays you directly, from a wallet or by scanning a QR. Free, and the money never passes through TipDrop.
+<p align="center">
+  Send crypto as a link. Tips and payment requests on six networks. The receiver never pays a fee.
+</p>
 
-## Supported networks
+<p align="center">
+  <a href="https://tipdrop.pro">Website</a> ·
+  <a href="https://tipdrop.pro/#token">$TDP token</a> ·
+  <a href="https://x.com/TipDropPro">X</a> ·
+  <a href="https://t.me/TipDropPro">Telegram</a> ·
+  <a href="mailto:support@tipdrop.pro">support@tipdrop.pro</a>
+</p>
 
-| Network | Tokens | Claim fee | Notes |
-|---|---|---|---|
-| BNB Chain | USDT, USDC, BNB | about $0.05 | |
-| Solana | USDC, USDT, SOL | $0.05 | Wallets: Phantom, Solflare, Backpack. The fee service pays fees directly inside the claim |
-| Base | USDC, ETH | about $0.05 | Base has no official USDT, only look-alikes, so it's left out on purpose |
-| Arbitrum | USDT, USDC, ETH | about $0.05 | |
-| Polygon | USDT, USDC, POL | about $0.05 | |
-| Ethereum | USDT, USDC, ETH | live, often $1–5 | The app warns about high fees; smallest tip is 20 USDT/USDC |
+---
 
-## Who pays what
+## What is TipDrop?
 
-- **Tip recipient: nothing, ever.** For USDT/USDC, the fee service pays the gas at claim time and is repaid from the tip. By default the sender ticks "Cover the fee", so they send e.g. 30.05 and the recipient gets exactly 30. For BNB/ETH/POL tips, a tiny amount is added on top to pay the claim.
-- **Tip sender:** the tip, the claim fee (if they cover it), and their own wallet's normal network fee for sending.
-- **Request creator: nothing.** The payer sends straight to their address.
-- **Request payer:** the amount plus their own wallet's normal network fee.
+TipDrop is a non-custodial web app for sending cryptocurrency as a shareable link.
 
-The claim fee follows real gas prices (minimum $0.05), so the fee service never loses money, even on Ethereum. It shows up live on the send page.
+1. **Create a tip.** Choose a network, a token and an amount, and add an optional message.
+2. **Fund it** from any wallet, or by scanning a QR code from any app or exchange.
+3. **Share the link** in Telegram, WhatsApp or any chat.
+4. **The recipient claims it** by pasting their wallet address or connecting a wallet. They don't need an account, and they don't pay a network fee.
 
-## Project layout
+TipDrop also supports **payment requests**: create a link with your address and an amount, and whoever opens it can pay you in one tap. Request payments go directly from the payer to the requester.
 
-```
-public/                  the website
-  index.html, 404.html
-  css/app.css
-  js/config.js           networks, tokens, minimum tips, name
-  js/app.js              the app
-  js/solana.js           Solana support (its library loads only when Solana is used)
-  js/token.js            the $TDP token page (yoursite/#token)
-  icons, og-image.png, site.webmanifest, robots.txt
-netlify/functions/
-  fuel.mjs               the fee service for BNB Chain, Base, Arbitrum, Polygon, Ethereum
-  sol.mjs                the fee service for Solana
-netlify.toml             Netlify settings + security headers
-brand/                   logo, token icons and header banners (not deployed)
-token/                   DropToken.sol, the one-file token + vesting contract draft (OpenZeppelin)
-package.json             libraries the fee service needs
-```
+## Features
 
-## Deploy (GitHub + Netlify, no terminal)
+| Feature | Description |
+|---|---|
+| **Tip links** | Put USDT, USDC or a network's native coin into a link anyone can claim |
+| **Payment requests** | Shareable "pay me" links with a fixed or open amount, payable by wallet or QR |
+| **Free to claim** | The recipient never pays network fees |
+| **Reclaim** | Senders can take back any tip that hasn't been claimed |
+| **QR deposits** | Fund tips straight from an exchange withdrawal |
+| **No sign-up** | No accounts, no email, no personal data |
+| **Non-custodial** | Keys are generated in the user's browser and are never sent to a server |
+| **Open source** | MIT-licensed; all code is in this repository |
 
-Netlify's drag-and-drop can't run server functions, so deploy from GitHub. It's all clicks, and every later update is automatic.
+## Supported networks and tokens
 
-1. **Put the files on GitHub.** github.com → **New repository** (e.g. `tipdrop`, Private is fine) → **uploading an existing file** → drag in everything from inside the unzipped `tipdrop` folder → **Commit changes**. On a Mac `.gitignore` is hidden; it's fine to skip it.
-2. **Connect it to Netlify.** **Add new project** → **Import an existing project** → GitHub → pick `tipdrop` → **Deploy**. Leave the settings as they are; `netlify.toml` sets them.
-3. **Create a gas wallet.** A brand-new wallet, used only for this (never your main one). In MetaMask: Add account → Account details → Show private key. The same address works on every network.
-4. **Fund it on each network you want free claims on:**
+| Network | Tokens |
+|---|---|
+| BNB Chain | USDT, USDC, BNB |
+| Solana | USDC, USDT, SOL |
+| Base | USDC, ETH |
+| Arbitrum | USDT, USDC, ETH |
+| Polygon | USDT, USDC, POL |
+| Ethereum | USDT, USDC, ETH |
 
-   | Network | Send to the gas wallet | Covers roughly |
-   |---|---|---|
-   | BNB Chain | 0.01 BNB | 500+ claims |
-   | Base | 0.002 ETH | 1,000+ claims |
-   | Arbitrum | 0.002 ETH | 1,000+ claims |
-   | Polygon | 5 POL | 300+ claims |
-   | Ethereum | 0.01–0.02 ETH | 10–30 claims |
+Token contracts are the official issuer addresses (Circle for USDC, Tether for USDT), listed in [`public/js/config.js`](public/js/config.js).
 
-   A network with no gas money still works; its fee service just answers "out of gas" and the app falls back to asking for a little coin.
-5. **Give Netlify the key.** Site configuration → **Environment variables** → Add variable `GAS_WALLET_KEY` with the private key (mark it secret, scope: Functions). Then **Deploys → Trigger deploy**.
-6. **Solana (optional).** Solana uses different keys, so it has its own fee wallet. In Phantom: Add account → Settings → Manage accounts → Show private key, and copy it. Send it about **0.05 SOL**. Add the Netlify variable `SOLANA_GAS_KEY` with that key, then redeploy. Check `https://your-site.netlify.app/api/sol` shows `"enabled":true`.
-7. **Check it.** Open `https://your-site.netlify.app/api/fuel?chain=base`. You should see `"enabled":true` and a fee.
+## How it works
 
-Updating later: replace files on GitHub; Netlify redeploys by itself.
+- Each tip is a **new wallet generated in the sender's browser** using the browser's secure random number generator.
+- The tip's key is stored in the link **after the `#`**. Browsers never send this part of a URL to any server, so TipDrop never sees or stores user funds or keys.
+- When a tip is claimed, the funds move straight from the tip's wallet to the recipient's address on-chain.
+- An optional **fee service** pays the network fee for the claim. On EVM networks it tops up the tip with a small amount of gas. On Solana it acts as the transaction's fee payer. In return, a small fee in USDT/USDC is deducted from the tip, so the recipient needs no native coin at all.
+- Payment requests contain only the requester's public address and amount. Payments go directly from payer to requester.
 
-## How Solana claims work
+### Security
 
-Solana lets one account pay the fees for someone else's transaction. When a USDC/USDT tip is claimed, the fee service builds the whole claim and signs it as the fee payer, and the page adds the tip's signature. In one transaction the recipient gets the tip, you get the $0.05 fee, and the tip's token-account deposit (~0.002 SOL) goes back to your fee wallet, which pays for opening the recipient's account if they've never held that token. So the Solana fee wallet stays roughly even and the recipient needs no SOL at all.
+- No custody: the TipDrop server never holds keys or user funds.
+- A strict Content Security Policy allows scripts only from the site itself and pinned library versions.
+- The fee service uses a separate wallet with small balances and per-day and per-IP limits.
+- Anyone who holds a tip link can claim it, the same as cash. Share links privately.
 
-One Solana quirk: sending USDC from a wallet to a brand-new address costs the sender about 0.002 SOL (~$0.30) once, to open that address's token account. Phantom adds it automatically; exchanges cover it themselves.
+## $TDP token
 
-## Where the fees go
+**TDP** is the community token of TipDrop on **BNB Chain**.
 
-Claim fees go to your gas wallet (or `FEE_RECEIVER`). Unused gas comes back to the gas wallet after each claim. Every so often, swap some collected USDT/USDC back to BNB/ETH/POL on each network to keep it topped up. Watch the balances on bscscan.com, basescan.org, arbiscan.io, polygonscan.com and etherscan.io.
+| | |
+|---|---|
+| Name | TipDrop |
+| Ticker | TDP |
+| Network | BNB Smart Chain (BEP-20) |
+| Contract | [`0xf46C57C84326240825DbD8Cb010DC22e4E2AE97b`](https://bscscan.com/token/0xf46C57C84326240825DbD8Cb010DC22e4E2AE97b) |
+| Total supply | 1,000,000,000 TDP |
+| Decimals | 18 |
+| Main pool | [PancakeSwap TDP/USDT](https://pancakeswap.finance/swap?chain=bsc&inputCurrency=0x55d398326f99059fF775485246999027B3197955&outputCurrency=0xf46C57C84326240825DbD8Cb010DC22e4E2AE97b) |
+| Charts | [DexScreener](https://dexscreener.com/bsc/0x35fc041144f73811c9fd6065b6e452acec9bfb22) · [GeckoTerminal](https://www.geckoterminal.com/bsc/pools/0x35fc041144f73811c9fd6065b6e452acec9bfb22) |
 
-## Fee service settings (Netlify environment variables)
+### Tokenomics
 
-| Variable | Default | What it does |
+| Allocation | Share | Tokens |
 |---|---|---|
-| `GAS_WALLET_KEY` | required | Private key of the gas wallet |
-| `MIN_FEE` | `0.05` | Smallest claim fee in USD |
-| `FEE_RECEIVER` | gas wallet | Where claim fees go |
-| `DAILY_LIMIT` | `300` | Max free-gas claims per day, per network (Ethereum: 30) |
-| `DAILY_LIMIT_ETHEREUM` etc. | | Override the limit for one network |
-| `PER_IP_LIMIT` | `20` | Max free-gas claims per day from one visitor |
-| `MAX_FUEL_USD` | `3` | Most gas sent to one tip, in USD (Ethereum: 15) |
-| `SOLANA_GAS_KEY` | required for Solana | Secret key of the Solana fee wallet (Phantom export, or the `[1,2,…]` key-file array) |
-| `SOLANA_FEE_RECEIVER` | Solana fee wallet | Where Solana claim fees go |
-| `DAILY_LIMIT_SOLANA` | `300` | Max Solana claims per day |
-| `RPC_BSC`, `RPC_BASE`, `RPC_ARBITRUM`, `RPC_POLYGON`, `RPC_ETHEREUM`, `RPC_SOLANA` | public nodes | Your own RPC per network (Alchemy, QuickNode, Ankr); recommended once you have traffic |
-| `PRICE_BNB`, `PRICE_ETH`, `PRICE_POL` | | Backup coin prices if CoinGecko and Coinbase are both down |
+| Community rewards | 27% | 270,000,000 |
+| Ecosystem / treasury | 20% | 200,000,000 |
+| Team (incl. initial liquidity) | 19% | 190,000,000 |
+| Exchange reserve | 15% | 150,000,000 |
+| Seed investor | 10% | 100,000,000 |
+| Marketing & airdrops | 9% | 90,000,000 |
+
+Live liquidity, holders and transfers are public on [DexScreener](https://dexscreener.com/bsc/0x35fc041144f73811c9fd6065b6e452acec9bfb22) and [BscScan](https://bscscan.com/token/0xf46C57C84326240825DbD8Cb010DC22e4E2AE97b#balances).
+
+### Utility
+
+Planned, not live yet:
+- Tips in TDP with no claim fee
+- TDP cashback for people who send tips
+- Holder perks, such as personal tip pages
+
+Each feature will be announced in the [Telegram channel](https://t.me/TipDropPro) when it ships.
+
+> TDP is a utility token for the TipDrop community. Nothing in this repository is financial advice or a promise of returns.
+
+## Roadmap
+
+- [x] Tip links and claims on BNB Chain
+- [x] Payment requests
+- [x] Base, Arbitrum, Polygon, Ethereum and Solana support
+- [x] Free claims via the fee service
+- [x] TDP token launch and token page
+- [ ] TDP tips with no claim fee
+- [ ] TDP cashback for senders
+- [ ] WalletConnect for mobile wallets on desktop
+- [ ] Smart-contract tips with automatic refund after expiry
+
+## Repository structure
+
+```
+public/              Website (HTML, CSS, JavaScript)
+  js/app.js          Tips, claims, payment requests
+  js/solana.js       Solana support
+  js/token.js        $TDP token page
+  js/config.js       Networks, tokens and token info
+netlify/functions/   Fee services (EVM networks and Solana)
+token/               Token contract source (draft with vesting)
+brand/               Logo, token icons and banners
+docs/DEPLOY.md       Deployment and operator guide
+```
 
 ## Links
 
-Everything a link needs lives after `#`, which browsers never send to any server:
-- Tip: `https://yoursite/#k=<key>&c=base&t=USDC&a=30&m=message&f=name` (Solana: `c=solana`)
-- Request: `https://yoursite/#pay=0xYourAddress&c=base&t=USDC&a=50&m=Logo%20design`
+| | |
+|---|---|
+| Website | https://tipdrop.pro |
+| Token page | https://tipdrop.pro/#token |
+| X (Twitter) | https://x.com/TipDropPro |
+| Telegram channel | https://t.me/TipDropPro |
+| Telegram chat | https://t.me/TipDropGroup |
+| TikTok | https://www.tiktok.com/@tipdropzz |
+| GitHub | https://github.com/TipDropPro/tipdrop |
+| Support | support@tipdrop.pro |
+| Logo (SVG) | https://tipdrop.pro/logo.svg |
 
-Old links without `c=` are BNB Chain links and keep working.
+## Contact
 
-## Safety notes
+Questions, partnerships or security reports: **support@tipdrop.pro**
 
-- **Keep the gas wallet small.** It's a hot wallet on a server. If the key might have leaked, move its funds and make a new one.
-- **Limits matter.** Someone could ask for free gas and then move tokens without paying the fee using their own code. It costs them a deposit each time and you a few cents (more on Ethereum), and the daily limits cap the total.
-- **Test with small amounts on each network first.** A $1 tip on BNB Chain, Solana, Base, Arbitrum and Polygon; claim it; take one back; pay a $1 request.
-- **The link is the money.** Anyone who has a tip link can claim it. Send links privately.
-- **My links lives in one browser.** Clearing browser data deletes the list.
-- `netlify.toml` sets a strict Content Security Policy. If you add analytics, add its domain to `script-src`.
-- If you charge fees or sell your own token, check the rules in your country first.
+The TipDrop team will never DM you first or ask for your seed phrase.
 
-## Next steps
+## License
 
-1. **Smart-contract version**: makes the claim fee impossible to skip and adds automatic refunds after 30 days.
-2. **WalletConnect** so people can pay from a phone wallet while on desktop.
-
-## Token page
-
-`yoursite/#token` shows the TDP token: buy and chart buttons, the contract address with copy and "Add to wallet", live price / market cap / liquidity / 24h volume from DexScreener (refreshes every 30 s), tokenomics with a chart, community links, and an FAQ.
-
-Everything on it comes from `TOKEN` in `public/js/config.js`: name, ticker, addresses, links, and allocations. To show a wallet address next to an allocation, fill in its `wallet` field. FAQ texts live in `public/js/token.js`.
-
-## Token links
-
-- Contract (BNB Chain): `0xf46C57C84326240825DbD8Cb010DC22e4E2AE97b`
-- PancakeSwap pair: `0x35fc041144f73811c9fd6065b6e452acec9bfb22`
-- X: https://x.com/TipDropPro · Telegram: https://t.me/TipDropPro · Chat: https://t.me/TipDropGroup · TikTok: https://www.tiktok.com/@tipdropzz
-
-`token/DropToken.sol` is the vesting version we drafted; the live TDP token was deployed separately.
+[MIT](LICENSE)
